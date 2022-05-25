@@ -18,6 +18,7 @@ class Body(Massive):
         Massive.__init__(self, x, y, radius, color, mass, name=name) 
         self.sun = False
         self.distance_to_sun = 0
+        self.is_crashed = False
         
     def draw(self, screen, FONT, FONTCOLOR):
         
@@ -37,17 +38,27 @@ class Body(Massive):
         distance_x = other_x - self.x
         distance_y = other_y - self.y
         distance = np.sqrt(distance_x**2 + distance_y**2) #- (self.radius + other.radius) / self.scale
+        crashed = False
         
         if other.sun:
             # print("other sun")
             self.distance_to_sun = distance
             
         # print(distance)
-        if distance < (self.radius + other.radius) / self.scale:
-            print( "CRASH" )
+        if distance <= (abs(self.radius - other.radius)) / self.scale:
+            if not (self.is_crashed): print( self.name, "and ", other.name, " crashed!" )
+            crashed = True
+            self.is_crashed = self.is_crashed or crashed
             #self.x_vel *= -1
             #self.y_vel *= -1
             return 0, 0
+        
+        else: 
+            crashed = False
+            if self.is_crashed: print(self.name, " uncrashed!")
+           
+            self.is_crashed = crashed
+        # print(crashed)
         
         force = self.G * self.mass * other.mass / distance**2
         theta = np.arctan2(distance_y, distance_x)
@@ -58,7 +69,7 @@ class Body(Massive):
     
 
       
-
+## WHY DOES IT PRINT THE CRASH SO OFTEN????
         
         
         

@@ -66,8 +66,34 @@ class Massive:
         pygame.draw.circle(screen,self.color,(x,y), self.radius)
         
     def update_position(self, objects):
+        # total_fx = total_fy = 0
+        # total_fx = total_fy = 0 #total forces exerted on the planet from planet which are not in self
+            
+        # for objec in objects: 
+        #     if self == objec:
+        #         continue
+            
+        #     fx, fy = self.attraction(objec)
+        #     total_fx += fx
+        #     total_fy += fy
+    
+
+        # self.x_vel += total_fx / self.mass * self.timestep 
+        # self.y_vel += total_fy / self.mass * self.timestep
+        
+        self.x += self.x_vel * self.timestep
+        self.y += self.y_vel * self.timestep
+        
+        if len(self.trajectory) > self.track_points:
+            self.trajectory = self.trajectory[-self.track_points:]
+            # print(self.name, len(self.trajectory))
+        
+        self.trajectory.append((self.x, self.y))
+        
+    
+    def update_velocity(self, objects):
         total_fx = total_fy = 0
-        total_fx = total_fy = 0 #total forces exerted on the planet from planet which are not in self
+        total_fx = total_fy = 0 #total forces exerted on the planet from other objects
             
         for objec in objects: 
             if self == objec:
@@ -80,17 +106,6 @@ class Massive:
 
         self.x_vel += total_fx / self.mass * self.timestep 
         self.y_vel += total_fy / self.mass * self.timestep
-        
-        self.x += self.x_vel * self.timestep
-        self.y += self.y_vel * self.timestep
-        
-        if len(self.trajectory) > self.track_points:
-            self.trajectory = self.trajectory[-self.track_points:]
-            # print(self.name, len(self.trajectory))
-        
-        self.trajectory.append((self.x, self.y))
-        
-        
     
     
     

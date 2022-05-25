@@ -69,7 +69,7 @@ interloper.x_vel = 5 * 1000
 
 ship = Ship(2*Body.AU, 2*Body.AU, 5, RED, 1000, 1.5, name="Ship")
 
-objects = [ ship , body2,  body0, body3, body4, interloper]
+objects = [ ship , body2,  body0, ]# body3, body4, interloper]
 
 # objects = objects[0, 2]
 
@@ -90,7 +90,7 @@ pygame.display.set_caption("Planet Simulation")
 running = True
 
 while running:
-    clock.tick(200) #Changes will occur at 60 tick rate
+    clock.tick(30) #Changes will occur at 60 tick rate
     screen.fill((0,0,0)) #Window Bg
     
     time_text = FONT.render(f"{pygame.time.get_ticks()//1000}", 1, WHITE)
@@ -106,12 +106,26 @@ while running:
             running = False
               
     
+    for i, obj in enumerate(objects):
+        #print("here")
+        # planet.update_position(objects)
+        
+        print(obj.name)
+        
+        if type(obj) == Ship:
+            obj.update_velocity(objects, keys_pressed)
+        else:
+            obj.update_velocity(objects)
+    
+        crashed_text = FONT.render(f"{obj.name} is crashed? {obj.is_crashed}", 1, WHITE)
+        screen.blit(crashed_text, (width/2-crashed_text.get_width(), height -20 - i * 20))
+    
     for obj in objects:
         #print("here")
         # planet.update_position(objects)
         
         if type(obj) == Ship:
-            obj.update_position(objects, keys_pressed, width, height)
+            obj.update_position(objects, width, height)
         else:
             obj.update_position(objects)
             

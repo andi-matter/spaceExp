@@ -93,27 +93,27 @@ class Ship(Body):
             
     
     
-    def update_position(self, objects, keys_pressed, width, height):
-        total_fx = total_fy = 0
-        total_fx = total_fy = 0 
+    def update_position(self, objects, width, height):
+        # total_fx = total_fy = 0
+        # total_fx = total_fy = 0 
             
-        for objec in objects: 
-            if self == objec:
-                continue
+        # for objec in objects: 
+        #     if self == objec:
+        #         continue
             
-            fx, fy = self.attraction(objec) #total forces exerted on the object from objects which are not itself
-            total_fx += fx
-            total_fy += fy
+        #     fx, fy = self.attraction(objec) #total forces exerted on the object from objects which are not itself
+        #     total_fx += fx
+        #     total_fy += fy
             
-        if self.is_ship:
-            acc = self.steering(keys_pressed)
-            #print(acc)
-            total_fx += acc[0]
-            total_fy += acc[1]
+        # if self.is_ship:
+        #     acc = self.steering(keys_pressed)
+        #     #print(acc)
+        #     total_fx += acc[0]
+        #     total_fy += acc[1]
     
 
-        self.x_vel += total_fx / self.mass * self.timestep 
-        self.y_vel += total_fy / self.mass * self.timestep
+        # self.x_vel += total_fx / self.mass * self.timestep 
+        # self.y_vel += total_fy / self.mass * self.timestep
         
         self.x += self.x_vel * self.timestep
         self.y += self.y_vel * self.timestep
@@ -149,3 +149,26 @@ class Ship(Body):
             # print(self.name, len(self.trajectory))
         
         self.trajectory.append((self.x, self.y))
+        
+        
+    def update_velocity(self, objects, keys_pressed):
+        total_fx = total_fy = 0
+        total_fx = total_fy = 0 
+            
+        for objec in objects: 
+            if self == objec:
+                continue
+            
+            fx, fy = self.attraction(objec) #total forces exerted on the object from objects which are not itself
+            total_fx += fx
+            total_fy += fy
+            
+        if self.is_ship:
+            acc = self.steering(keys_pressed)
+            #print(acc)
+            total_fx += acc[0]
+            total_fy += acc[1]
+    
+
+        self.x_vel += total_fx / self.mass * self.timestep 
+        self.y_vel += total_fy / self.mass * self.timestep
