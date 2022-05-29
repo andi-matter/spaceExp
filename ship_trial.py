@@ -51,12 +51,12 @@ body0.y_vel = -velo*1.237
 body2 = Body(0, 0, 16, GREY, mass, name="Body 2")
 body2.y_vel = 0
 body2.sun = True
-#body2.mass = 0.1
+# body2.mass = 0.1
 
 body3 = Body(3*Body.AU, 0, 6, URANUS_BLUE, mass/100, name="Body 3")
 body3.y_vel = -velo*1.0
 
-body4 = Body(-3*Body.AU, 0, 6, URANUS_BLUE, mass/100, name="Body 3")
+body4 = Body(-3*Body.AU, 0, 6, URANUS_BLUE, mass/100, name="Body 3 too")
 body4.y_vel = velo*1.0
 
 body3_moon = Body(3.11*Body.AU, 0, 6, DARK_GREY, mass/1000/300, name="Body 3 Moon")
@@ -69,7 +69,7 @@ interloper.x_vel = 5 * 1000
 
 ship = Ship(2*Body.AU, 2*Body.AU, 5, RED, 1000, 1.5, name="Ship")
 
-objects = [ ship , body2,  body0, ]# body3, body4, interloper]
+objects = [ ship , body2,  body0,  body3, body4, interloper]
 
 # objects = objects[0, 2]
 
@@ -90,7 +90,7 @@ pygame.display.set_caption("Planet Simulation")
 running = True
 
 while running:
-    clock.tick(30) #Changes will occur at 60 tick rate
+    clock.tick(90) #Changes will occur at 60 tick rate
     screen.fill((0,0,0)) #Window Bg
     
     time_text = FONT.render(f"{pygame.time.get_ticks()//1000}", 1, WHITE)
@@ -110,14 +110,14 @@ while running:
         #print("here")
         # planet.update_position(objects)
         
-        print(obj.name)
+        # print(obj.name)
         
         if type(obj) == Ship:
             obj.update_velocity(objects, keys_pressed)
         else:
             obj.update_velocity(objects)
     
-        crashed_text = FONT.render(f"{obj.name} is crashed? {obj.is_crashed}", 1, WHITE)
+        crashed_text = FONT.render(f"{obj.name} is crashed? {any(obj.is_crashed.values())}", 1, WHITE)
         screen.blit(crashed_text, (width/2-crashed_text.get_width(), height -20 - i * 20))
     
     for obj in objects:

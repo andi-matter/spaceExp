@@ -17,6 +17,19 @@ class Massive:
     
     scale = 10/AU
     timestep = 3600 * 24
+       
+    GREY = (128,128,128) #mercury
+    YELLOWISH = (165,124,27) #venus
+    BLUE = (0,0,225) #for earth
+    RED = (255, 0, 0) #alert
+    BROWN = (144, 97, 77) #jupiter
+    CARMEL = (195, 161, 113) #saturn
+    URANUS_BLUE = (79, 208, 231) #uranus
+    NEPTUNE = (62, 84, 232) #neptune
+    WHITE = (255, 255, 255) #for text
+    YELLOW = (255, 255, 0) #for sun
+    DARK_GREY = (80,78,81) #orbit
+    
     
     def __init__(self, x, y, radius, color, mass, name="Massive"):
         self.x = x

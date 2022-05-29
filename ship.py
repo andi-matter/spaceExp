@@ -20,6 +20,10 @@ class Ship(Body):
         self.radius = radius
         self.track_points = 100
         
+        self.relative_velocities = {}
+        self.distant_objects = {}
+        self.distant_colors = {}
+        
         
     
     
@@ -76,7 +80,7 @@ class Ship(Body):
         
         arr_scale = 2/4
         
-        x_triangle = ( (x - line_x, y - self.radius*arr_scale), 
+        x_triangle = ( (x - line_x, y - self.radius * arr_scale), 
                        (x -  line_x + np.sign(self.x_vel) * self.radius, y), 
                        (x - line_x, y + self.radius * arr_scale) )      # x vel arrow head
         
@@ -84,11 +88,44 @@ class Ship(Body):
                        (x, y- line_y + np.sign(self.y_vel) * self.radius),
                        (x + self.radius * arr_scale, y - line_y) )      # y vel arrow head
         
+        ship_arrow_col = self.WHITE
+        ship_col = self.color
+        if any(self.is_crashed.values()): 
+            ship_arrow_col = self.RED
+            ship_col = self.RED
         
-        pygame.draw.polygon(screen, FONTCOLOR, x_triangle) # draw x vel arrow head
-        pygame.draw.polygon(screen, FONTCOLOR, y_triangle) # draw y vel arrow head
+        pygame.draw.polygon(screen, ship_arrow_col, x_triangle) # draw x vel arrow head
+        pygame.draw.polygon(screen, ship_arrow_col, y_triangle) # draw y vel arrow head
         
-        pygame.draw.rect(screen,self.color,pygame.Rect((x-self.radius,y-self.radius), (self.radius*2, self.radius*2)) ) # draw ship object
+        pygame.draw.rect(screen,ship_col,pygame.Rect((x-self.radius,y-self.radius), (self.radius*2, self.radius*2)) ) # draw ship object
+        
+        ## draw relative velocity errors on other objects
+        
+        # print(len(self.relative_velocities))
+        
+        for objec in self.distant_objects:
+            
+            other_x = self.distant_objects[objec][0] * self.scale + screen.get_width() / 2
+            other_y = self.distant_objects[objec][1] * self.scale + screen.get_height() / 2
+            relative_x, relative_y = self.relative_velocities[objec]
+            color = self.distant_colors[objec]
+            
+            rel_line_x = - relative_x / max_vel / 20
+            rel_line_y = - relative_y / max_vel / 20
+            
+            # print(other_x, other_y)
+            
+            # print(rel_line_x, rel_line_y)
+            
+            rel_x_triangle = ( (other_x - rel_line_x, other_y - self.radius * arr_scale),
+                               (other_x - rel_line_x + np.sign(relative_x) * self.radius, other_y),
+                               (other_x - rel_line_x, other_y + self.radius * arr_scale) )
+            rel_y_triangle = ( (other_x - self.radius * arr_scale, other_y - rel_line_y),
+                               (other_x, other_y - rel_line_y + np.sign(relative_y) * self.radius),
+                               (other_x + self.radius * arr_scale, other_y - rel_line_y) )
+            
+            pygame.draw.polygon(screen, color, rel_x_triangle) # draw x vel arrow head
+            pygame.draw.polygon(screen, color, rel_y_triangle) # draw y vel arrow head
 
             
     
@@ -163,11 +200,20 @@ class Ship(Body):
             total_fx += fx
             total_fy += fy
             
-        if self.is_ship:
-            acc = self.steering(keys_pressed)
+            relative_x_vel = self.x_vel - objec.x_vel
+            relative_y_vel = self.y_vel - objec.y_vel
+            self.relative_velocities[objec.name] = [relative_x_vel, relative_y_vel]
+            self.distant_objects[objec.name] = [objec.x, objec.y]
+            self.distant_colors[objec.name] = objec.color
+            
+            
+            
+            
+        #if self.is_ship:
+        acc = self.steering(keys_pressed)
             #print(acc)
-            total_fx += acc[0]
-            total_fy += acc[1]
+        total_fx += acc[0]
+        total_fy += acc[1]
     
 
         self.x_vel += total_fx / self.mass * self.timestep 

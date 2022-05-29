@@ -18,7 +18,7 @@ class Body(Massive):
         Massive.__init__(self, x, y, radius, color, mass, name=name) 
         self.sun = False
         self.distance_to_sun = 0
-        self.is_crashed = False
+        self.is_crashed = {}
         
     def draw(self, screen, FONT, FONTCOLOR):
         
@@ -45,19 +45,19 @@ class Body(Massive):
             self.distance_to_sun = distance
             
         # print(distance)
-        if distance <= (abs(self.radius - other.radius)) / self.scale:
-            if not (self.is_crashed): print( self.name, "and ", other.name, " crashed!" )
+        if distance <= (abs(self.radius + other.radius)) / self.scale:
+            # if not (self.is_crashed): print( self.name, "and ", other.name, " crashed!" )
             crashed = True
-            self.is_crashed = self.is_crashed or crashed
+            self.is_crashed[other.name] = crashed
             #self.x_vel *= -1
             #self.y_vel *= -1
             return 0, 0
         
         else: 
             crashed = False
-            if self.is_crashed: print(self.name, " uncrashed!")
+            # if self.is_crashed: print(self.name, " uncrashed!")
            
-            self.is_crashed = crashed
+            self.is_crashed[other.name] = crashed
         # print(crashed)
         
         force = self.G * self.mass * other.mass / distance**2
